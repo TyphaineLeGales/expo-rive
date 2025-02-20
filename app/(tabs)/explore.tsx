@@ -11,7 +11,7 @@ export default function TabTwoScreen() {
         stateMachineName="avatar"
         style={{width: 200, height: 200}}
       />
-        <ThemedText type="title">Hello there 👋 </ThemedText>
+      <ThemedText type="title">Hello there 👋 </ThemedText>
       <Rive
         url="https://public.rive.app/community/runtime-files/2195-4346-avatar-pack-use-case.riv"
         artboardName="Avatar 3"

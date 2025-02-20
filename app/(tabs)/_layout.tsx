@@ -27,6 +27,15 @@ export default function TabLayout() {
         }),
       }}>
       <Tabs.Screen
+        name="rive"
+        options={{
+          title: "Rive",
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={28} name="movieclapper.fill" color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="index"
         options={{
           title: 'Home',

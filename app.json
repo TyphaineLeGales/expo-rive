@@ -24,6 +24,7 @@
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
+    
     "plugins": [
       "expo-router",
       [
@@ -34,8 +35,23 @@
           "resizeMode": "contain",
           "backgroundColor": "#EFCFA0"
         }
+      ], 
+      "expo-asset",
+      [
+        "expo-notifications",
+        {
+          "defaultChannel": "default",
+          "enableBackgroundRemoteNotifications": false
+        }
+      ],
+      [
+        "expo-custom-assets",
+        {
+          "assetsPaths": ["./rive"]
+        }
       ]
     ],
+    
     "experiments": {
       "typedRoutes": true
     },
