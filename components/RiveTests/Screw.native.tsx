@@ -2,7 +2,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import {  useRef, useEffect, useState} from "react";
 import { StyleSheet, } from 'react-native';
-import Rive, {Fit, RiveRef} from 'rive-react-native';
+import Rive, {Fit, RiveEvent, RiveRef} from 'rive-react-native';
 export default function Screw () {
     const riveComponentRef = useRef<RiveRef>(null);
   const timer = useRef<NodeJS.Timeout | string>('')
@@ -34,15 +34,21 @@ export default function Screw () {
 
   const handleStateChanges = (stateMachineName: string, stateName: string) => {
     if(stateName === "Tracking" && counter > 0) {
+        console.log("on tracking")
       clearTimeout(timer.current)
     }
+  }
+
+  const onEvent = (event: RiveEvent) => {
+    console.log("event received", event)
+
   }
 
     return (
         <ThemedView style={styles.container}>
           <Rive
           ref={riveComponentRef}
-          resourceName="screw4"
+          resourceName="screw6"
           fit={Fit.Cover}
           style={{
   
@@ -50,6 +56,7 @@ export default function Screw () {
           }}
           stateMachineName="screw"
           onStateChanged={handleStateChanges}
+          onRiveEventReceived={onEvent}
         />
         <ThemedText type="subtitle">idle count: {counter}</ThemedText>
       </ThemedView>
