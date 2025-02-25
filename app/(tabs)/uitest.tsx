@@ -1,15 +1,43 @@
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
-import {  useRef } from "react";
-import { StyleSheet, Text } from 'react-native';
+import {  useRef, useEffect, useState} from "react";
+import { StyleSheet, } from 'react-native';
 import Rive, {Fit, RiveRef} from 'rive-react-native';
 export default function CustomRive() {
   const riveComponentRef = useRef<RiveRef>(null);
+
+  const [counter, setCounter] = useState(15);
+  useEffect(() => {
+    riveComponentRef.current?.setInputState(
+      'screw',
+      'userIsIdle',
+      false
+    );
+
+  }, [])
+  useEffect(() => {
+    const timer = counter > 0 && setInterval(() => setCounter(counter - 1), 1000);
+    if(counter === 0) {
+      setIdle()
+    }
+    return () => {
+      clearInterval(timer)};
+  }, [counter]);
+
+  const setIdle= () => {
+    console.log("set idle is called")
+    riveComponentRef.current?.setInputState(
+      'screw',
+      'userIsIdle',
+      true
+    );
+  };
+
     return (
         <ThemedView style={styles.container}>
           <Rive
           ref={riveComponentRef}
-          resourceName="screwed3"
+          resourceName="screw4"
           fit={Fit.Cover}
           style={{
   
@@ -17,7 +45,7 @@ export default function CustomRive() {
           }}
           stateMachineName="screw"
         />
-        <ThemedText type="title">Let's screw</ThemedText>
+        <ThemedText type="subtitle">idle count: {counter}</ThemedText>
       </ThemedView>
     )
 }
