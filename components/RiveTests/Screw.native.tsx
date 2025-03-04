@@ -1,13 +1,15 @@
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import {  useRef, useEffect, useState} from "react";
-import { StyleSheet, PanResponder, } from 'react-native';
+import { StyleSheet, PanResponder, Switch, View, Button,} from 'react-native';
 import Rive, {Fit, RiveEvent, RiveRef} from 'rive-react-native';
 export default function Screw () {
     // setting idle render retriggers a render 
     const riveComponentRef = useRef<RiveRef>(null);
     const timer = useRef<NodeJS.Timeout | string>('');
     const touchPosition = useRef({ x: 0, y: 0 })
+    const [isEnabled, setIsEnabled] = useState(false);
+    const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
      // Track touch position
     const panResponder = PanResponder.create({
@@ -37,6 +39,17 @@ export default function Screw () {
         }
     }, [counter]);
 
+    useEffect(() => {
+        if(isEnabled) {
+            riveComponentRef.current?.setInputState(
+                'screw',
+                'isDone',
+                true
+            );
+
+        }
+      }, [isEnabled]);
+
     const setIdle= () => {
         riveComponentRef.current?.setInputState(
             'screw',
@@ -52,9 +65,9 @@ export default function Screw () {
             clearTimeout(timer.current)
         }
 
-        if(stateName === "Detecting") {
-            console.log("on detecting, position is:", touchPosition.current)
-        }
+        // if(stateName === "Detecting") {
+        //     console.log("on detecting, position is:", touchPosition.current)
+        // }
 
     }
 
@@ -62,31 +75,50 @@ export default function Screw () {
         console.log("event received", event)
     }
 
+    const nextChange = () => {
+        riveComponentRef.current?.fireStateAtPath("starsOut", "stars"); // access nested artoboard properties
+    }
+
     return (
         <ThemedView style={styles.container} {...panResponder.panHandlers}>
+  
             <Rive
-            ref={riveComponentRef}
-            resourceName="screw6"
-            fit={Fit.Cover}
-            style={{
-
-            width:"100%"
-            }}
-            stateMachineName="screw_current"
-            onStateChanged={handleStateChanges}
-            onRiveEventReceived={onEvent}
-            
-        />
-        <ThemedText type="subtitle">idle count: {counter}</ThemedText>
+                ref={riveComponentRef}
+                resourceName="screw10"
+                fit={Fit.Cover}
+                style={{width:"100%"}}
+                stateMachineName="screw"
+                onStateChanged={handleStateChanges}
+                onRiveEventReceived={onEvent}
+            />
+         <View style={{height:"10%", width: "100%", display:"flex", flexDirection:"row", justifyContent:"space-between", alignItems:"center", padding: 12}} >
+            <Button
+                onPress={nextChange}
+                title="Next"
+                color="#FF6161"
+                accessibilityLabel="Learn more about this purple button"
+            />
+            <ThemedText type="subtitle">idle count: {counter}</ThemedText>
+            <Switch
+                trackColor={{false: '#767577', true: '#81b0ff'}}
+                thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+                ios_backgroundColor="#3e3e3e"
+                onValueChange={toggleSwitch}
+                value={isEnabled}
+            />
+         </View>
         </ThemedView>
     )
 
 }
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
+      flex: 5,
       backgroundColor: '#fff',
       alignItems: 'center',
       justifyContent: 'center',
     },
+    checkbox: {
+        alignSelf: 'center',
+      },
   });
